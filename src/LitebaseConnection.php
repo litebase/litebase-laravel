@@ -1,12 +1,13 @@
 <?php
 
-namespace SpaceStudio\Litebase;
+namespace Litebase;
 
 use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
 use Illuminate\Database\Schema\SQLiteBuilder;
 use Illuminate\Database\Schema\Grammars\SQLiteGrammar as SchemaGrammar;
+use Litebase\LitebasePDO;
 
 class LitebaseConnection extends Connection
 {
@@ -19,11 +20,26 @@ class LitebaseConnection extends Connection
      * @param  array  $config
      * @return void
      */
-    public function __construct($database = '', array $config = [])
+    public function __construct(array $config = [])
     {
         $this->config = $config;
-        $this->pdo = new LitebasePDO($database, $config['username'], $config['password']);
-        parent::__construct($this->pdo, $database, '', $this->config);
+
+        $this->pdo = new LitebasePDO(
+            $config['host'],
+            $config['database'],
+            $config['key'],
+            $config['secret']
+        );
+
+        parent::__construct($this->pdo, $config['database'], '', $this->config);
+    }
+
+    /**
+     * Get the current PDO connection.
+     */
+    public function getPdo(): LitebasePDO
+    {
+        return $this->pdo;
     }
 
     /**

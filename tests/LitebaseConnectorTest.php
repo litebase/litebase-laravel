@@ -1,13 +1,11 @@
 <?php
 
-namespace SpaceStudio\Litebase\Tests;
+namespace Litebase\Tests;
 
 use Exception;
-use Illuminate\Database\Query\Processors\SQLiteProcessor;
-use SpaceStudio\Litebase\LitebaseConnection;
-use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
-use SpaceStudio\Litebase\LitebaseConnector;
-use SpaceStudio\Litebase\LitebasePDO;
+use Litebase\LitebaseConnector;
+use Litebase\LitebasePDO;
+use Litebase\Tests\TestCase;
 
 class LitebaseConnectorTest extends TestCase
 {
@@ -22,9 +20,10 @@ class LitebaseConnectorTest extends TestCase
     {
         $connector = new LitebaseConnector;
         $connection = $connector->connect([
+            'host' => 'litebase.test',
             'database' => 'testdatabase',
-            'username' => 'test',
-            'password' => 'password',
+            'key' => 'key',
+            'secret' => 'secret',
         ]);
 
         $this->assertInstanceOf(LitebasePDO::class, $connection);
@@ -36,9 +35,10 @@ class LitebaseConnectorTest extends TestCase
         $this->expectExceptionMessage('The database identifier contains illegal characters.');
         $connector = new LitebaseConnector;
         $connector->connect([
+            'host' => 'litebase.test',
             'database' => 'testdatabase!.,$%',
-            'username' => 'test',
-            'password' => 'password',
+            'key' => 'key',
+            'secret' => 'secret',
         ]);
     }
 }

@@ -1,13 +1,12 @@
 <?php
 
-namespace SpaceStudio\Litebase\Tests;
+namespace Litebase\Tests;
 
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
-use SpaceStudio\Litebase\LitebaseServiceProvider;
+use Litebase\LitebaseServiceProvider;
 
 class TestCase extends TestbenchTestCase
 {
-
     public function afterSetup()
     {
         # code...
@@ -24,9 +23,10 @@ class TestCase extends TestbenchTestCase
 
         $app['config']->set('database.connections.litebase', [
             'driver'   => 'litebase',
+            'host' => 'litebase.test',
             'database' => 'testdatabase',
-            'username' => 'test',
-            'password' => 'password',
+            'key' => 'key',
+            'secret' => 'secret',
         ]);
     }
 

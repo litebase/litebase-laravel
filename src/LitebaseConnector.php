@@ -1,9 +1,10 @@
 <?php
 
-namespace SpaceStudio\Litebase;
+namespace Litebase;
 
 use Exception;
 use Illuminate\Database\Connectors\Connector;
+use Litebase\LitebasePDO;
 use PDO;
 
 class LitebaseConnector extends Connector
@@ -38,7 +39,13 @@ class LitebaseConnector extends Connector
     public function createConnection($dsn, array $config, array $options)
     {
         try {
-            return $this->createPdoConnection($dsn, $config['username'], $config['password'], $options);
+            return $this->createPdoConnection(
+                $config['host'],
+                $config['database'],
+                $config['key'],
+                $config['secret'],
+                $options
+            );
         } catch (Exception $e) {
             return $this->tryAgainIfCausedByLostConnection($e, $dsn, $config['username'], $config['password'], $options);
         }

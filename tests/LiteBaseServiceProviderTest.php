@@ -1,11 +1,11 @@
 <?php
 
-namespace SpaceStudio\Litebase\Tests;
+namespace Litebase\Tests;
 
-use SpaceStudio\Litebase\LitebaseConnection;
-use SpaceStudio\Litebase\LitebaseConnector;
+use Litebase\LitebaseConnection;
+use Litebase\LitebaseConnector;
 
-class LitebaseServiceProvideTest extends TestCase
+class LitebaseServiceProviderTest extends TestCase
 {
     public function test_it_binds_the_litebase_connector()
     {

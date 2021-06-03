@@ -1,6 +1,6 @@
 <?php
 
-namespace SpaceStudio\Litebase;
+namespace Litebase;
 
 use Illuminate\Database\Connection;
 use Illuminate\Support\ServiceProvider;
@@ -27,7 +27,11 @@ class LitebaseServiceProvider extends ServiceProvider
     public function boot()
     {
         Connection::resolverFor('litebase', function ($connection, $database, $prefix, $config) {
-            return new LitebaseConnection($database, $config);
+            $connection = new LitebaseConnection($config);
+            // @todo: Need to ensure this is configurable.
+            $connection->getPdo()->pendingConnection();
+
+            return $connection;
         });
     }
 }
