@@ -14,22 +14,13 @@ class LitebaseConnection extends Connection
     /**
      * Create a new database connection instance.
      *
-     * @param  \PDO|\Closure  $pdo
-     * @param  string  $database
-     * @param  string  $tablePrefix
-     * @param  array  $config
      * @return void
      */
     public function __construct(array $config = [])
     {
         $this->config = $config;
 
-        $this->pdo = new LitebasePDO(
-            $config['host'],
-            $config['database'],
-            $config['key'],
-            $config['secret']
-        );
+        $this->pdo = new LitebasePDO($config);
 
         parent::__construct($this->pdo, $config['database'], '', $this->config);
     }

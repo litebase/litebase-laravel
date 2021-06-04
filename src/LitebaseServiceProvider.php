@@ -26,6 +26,10 @@ class LitebaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->singleton(LitebaseClient::class, function ($app) {
+            return new LitebaseClient($app->config->get('database.connections.litebase'));
+        });
+
         Connection::resolverFor('litebase', function ($connection, $database, $prefix, $config) {
             $connection = new LitebaseConnection($config);
             // @todo: Need to ensure this is configurable.

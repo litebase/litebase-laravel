@@ -33,11 +33,9 @@ class ServeCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(LitebaseClient $client): void
     {
-        QueryProxyServer::run($this->option('port'));
+        QueryProxyServer::run($client, $this->option('port'));
     }
 }
