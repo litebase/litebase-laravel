@@ -33,5 +33,9 @@ class LitebaseServiceProvider extends ServiceProvider
 
             return $connection;
         });
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([ServeCommand::class]);
+        }
     }
 }
