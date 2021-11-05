@@ -14,9 +14,7 @@ class LitebaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('db.connector.litebase', function ($app) {
-            return new LitebaseConnector;
-        });
+        //
     }
 
     /**
@@ -31,15 +29,11 @@ class LitebaseServiceProvider extends ServiceProvider
         });
 
         Connection::resolverFor('litebase', function ($connection, $database, $prefix, $config) {
-            $connection = new LitebaseConnection($config);
-            // @todo: Need to ensure this is configurable.
-            $connection->getPdo()->pendingConnection();
-
-            return $connection;
+            return new LitebaseConnection($config);
         });
 
         if ($this->app->runningInConsole()) {
-            $this->commands([ServeCommand::class]);
+            // $this->commands([]);
         }
     }
 }

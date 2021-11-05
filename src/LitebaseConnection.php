@@ -2,7 +2,6 @@
 
 namespace Litebase;
 
-use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
 use Illuminate\Database\Schema\SQLiteBuilder;
@@ -11,6 +10,13 @@ use Litebase\LitebasePDO;
 
 class LitebaseConnection extends Connection
 {
+    /**
+     * The active PDO connection.
+     *
+     * @var LitebasePDO
+     */
+    protected $pdo;
+
     /**
      * Create a new database connection instance.
      *

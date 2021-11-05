@@ -30,10 +30,10 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "guzzlehttp/guzzle": "^7.0",
         "illuminate/support": "^7.0|^8.0",
-        "litebase/litebase-php": "dev-master"
+        "litebase/litebase-php": "dev-main"
     },
     "require-dev": {
         "illuminate/database": "^8.0",

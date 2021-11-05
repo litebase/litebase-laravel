@@ -23,6 +23,7 @@ class TestCase extends TestbenchTestCase
 
         $app['config']->set('database.connections.litebase', [
             'driver'   => 'litebase',
+            'region' => 'us-east-1',
             'host' => 'litebase.test',
             'database' => 'testdatabase',
             'key' => 'key',

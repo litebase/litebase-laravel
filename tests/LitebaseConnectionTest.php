@@ -12,6 +12,7 @@ class LitebaseConnectionTest extends TestCase
     public function test_it_can_be_created()
     {
         $connection = new LitebaseConnection([
+            'region' => 'us-east-1',
             'host' => 'litebase.test',
             'database' => 'testdatabase',
             'key' => 'key',
@@ -24,6 +25,7 @@ class LitebaseConnectionTest extends TestCase
     public function test_it_returns_the_schema_builder()
     {
         $connection = new LitebaseConnection([
+            'region' => 'us-east-1',
             'host' => 'litebase.test',
             'database' => 'testdatabase',
             'key' => 'key',
@@ -36,6 +38,7 @@ class LitebaseConnectionTest extends TestCase
     public function test_it_returns_the_default_schema_grammar()
     {
         $connection = new LitebaseConnection([
+            'region' => 'us-east-1',
             'host' => 'litebase.test',
             'database' => 'testdatabase',
             'key' => 'key',
@@ -50,6 +53,7 @@ class LitebaseConnectionTest extends TestCase
     public function test_it_returns_the_default_post_processor()
     {
         $connection = new LitebaseConnection([
+            'region' => 'us-east-1',
             'host' => 'litebase.test',
             'database' => 'testdatabase',
             'key' => 'key',
