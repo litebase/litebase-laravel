@@ -1,19 +1,19 @@
 <?php
 
-namespace Litebase;
+namespace LitebaseDB;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
-use Illuminate\Database\Schema\SQLiteBuilder;
 use Illuminate\Database\Schema\Grammars\SQLiteGrammar as SchemaGrammar;
-use Litebase\LitebasePDO;
+use Illuminate\Database\Schema\SQLiteBuilder;
+// use LitebaseDB\LitebaseDBPDO;
 
-class LitebaseConnection extends Connection
+class LitebaseDBConnection extends Connection
 {
     /**
      * The active PDO connection.
      *
-     * @var LitebasePDO
+     * @var \LitebaseDB\LitebaseDBPDO
      */
     protected $pdo;
 
@@ -26,15 +26,15 @@ class LitebaseConnection extends Connection
     {
         $this->config = $config;
 
-        $this->pdo = new LitebasePDO($config);
+        $this->pdo = new LitebaseDBPDO($config);
 
-        parent::__construct($this->pdo, $config['database'], '', $this->config);
+        parent::__construct($this->pdo, '', '', $this->config);
     }
 
     /**
      * Get the current PDO connection.
      */
-    public function getPdo(): LitebasePDO
+    public function getPdo(): LitebaseDBPDO
     {
         return $this->pdo;
     }

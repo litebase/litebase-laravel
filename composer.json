@@ -1,5 +1,5 @@
 {
-    "name": "litebase/litebase-laravel",
+    "name": "litebasedb/litebasedb-laravel",
     "authors": [
         {
             "name": "Thiery Laverdure",
@@ -8,12 +8,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "Litebase\\": "src/"
+            "LitebaseDB\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Litebase\\Tests\\": "tests"
+            "LitebaseDB\\Tests\\": "tests"
         }
     },
     "config": {
@@ -33,7 +33,7 @@
         "php": "^8.0",
         "guzzlehttp/guzzle": "^7.0",
         "illuminate/support": "^7.0|^8.0",
-        "litebase/litebase-php": "dev-main"
+        "litebasedb/litebasedb-php": "dev-develop"
     },
     "require-dev": {
         "illuminate/database": "^8.0",
@@ -47,7 +47,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Litebase\\LitebaseServiceProvider"
+                "LitebaseDB\\LitebaseDBServiceProvider"
             ]
         }
     }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Litebase\Tests;
+namespace LitebaseDB\Tests;
 
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
-use Litebase\LitebaseServiceProvider;
+use LitebaseDB\LitebaseDBServiceProvider;
 
 class TestCase extends TestbenchTestCase
 {
@@ -21,19 +21,18 @@ class TestCase extends TestbenchTestCase
     {
         parent::getEnvironmentSetUp($app);
 
-        $app['config']->set('database.connections.litebase', [
-            'driver'   => 'litebase',
-            'region' => 'us-east-1',
-            'host' => 'litebase.test',
-            'database' => 'testdatabase',
-            'key' => 'key',
-            'secret' => 'secret',
+        $app['config']->set('database.connections.litebasedb', [
+            'driver' => 'litebasedb',
+            'database' => 'test',
+            'host' => 'us-east-1.litebase.test',
+            'access_key_id' => 'key',
+            'secret_access_key' => 'secret',
         ]);
     }
 
     protected function getPackageProviders($app)
     {
-        return [LitebaseServiceProvider::class];
+        return [LitebaseDBServiceProvider::class];
     }
 
     public function setUp(): void
