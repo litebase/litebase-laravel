@@ -26,7 +26,7 @@ class TestCase extends TestbenchTestCase
             'database' => 'test',
             'host' => 'us-east-1.litebase.test',
             'access_key_id' => 'key',
-            'secret_access_key' => 'secret',
+            'access_key_secret' => 'secret',
         ]);
     }
 

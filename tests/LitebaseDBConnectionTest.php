@@ -13,7 +13,7 @@ class LitebaseDBConnectionTest extends TestCase
     {
         $connection = new LitebaseDBConnection([
             'access_key_id' => 'key',
-            'secret_access_key' => 'secret',
+            'access_key_secret' => 'secret',
             'database' => 'test',
             'host' => 'us-east.litebase.test',
         ]);
@@ -25,7 +25,7 @@ class LitebaseDBConnectionTest extends TestCase
     {
         $connection = new LitebaseDBConnection([
             'access_key_id' => 'key',
-            'secret_access_key' => 'secret',
+            'access_key_secret' => 'secret',
             'database' => 'test',
             'host' => 'us-east.litebase.test',
         ]);
@@ -37,7 +37,7 @@ class LitebaseDBConnectionTest extends TestCase
     {
         $connection = new LitebaseDBConnection([
             'access_key_id' => 'key',
-            'secret_access_key' => 'secret',
+            'access_key_secret' => 'secret',
             'database' => 'test',
             'host' => 'us-east.litebase.test',
         ]);
@@ -51,7 +51,7 @@ class LitebaseDBConnectionTest extends TestCase
     {
         $connection = new LitebaseDBConnection([
             'access_key_id' => 'key',
-            'secret_access_key' => 'secret',
+            'access_key_secret' => 'secret',
             'database' => 'test',
             'host' => 'us-east.litebase.test',
         ]);
