@@ -4,9 +4,8 @@ namespace LitebaseDB;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
-use Illuminate\Database\Schema\Grammars\SQLiteGrammar as SchemaGrammar;
+use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
 use Illuminate\Database\Schema\SQLiteBuilder;
-// use LitebaseDB\LitebaseDBPDO;
 
 class LitebaseDBConnection extends Connection
 {
@@ -26,17 +25,7 @@ class LitebaseDBConnection extends Connection
     {
         $this->config = $config;
 
-        $this->pdo = new LitebaseDBPDO($config);
-
-        parent::__construct($this->pdo, '', '', $this->config);
-    }
-
-    /**
-     * Get the current PDO connection.
-     */
-    public function getPdo(): LitebaseDBPDO
-    {
-        return $this->pdo;
+        parent::__construct(new LitebaseDBPDO($config), '', '', $this->config);
     }
 
     /**
@@ -60,7 +49,7 @@ class LitebaseDBConnection extends Connection
      */
     protected function getDefaultSchemaGrammar()
     {
-        return new SchemaGrammar;
+        return new SQLiteGrammar;
     }
 
     /**
