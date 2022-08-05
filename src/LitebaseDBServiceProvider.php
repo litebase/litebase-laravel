@@ -24,7 +24,7 @@ class LitebaseDBServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->singleton(LitebaseClient::class, function ($app) {
+        $this->app->singleton(LitebaseDBClient::class, function ($app) {
             return new LitebaseDBClient($app->config->get('database.connections.litebasedb'));
         });
 
