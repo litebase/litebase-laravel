@@ -1,18 +1,19 @@
 <?php
 
-namespace LitebaseDB;
+namespace Litebase\Laravel;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
-use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
-use Illuminate\Database\Schema\SQLiteBuilder;
+use Litebase\Laravel\Database\Schema\Grammars\LitebaseGrammar;
+use Litebase\Laravel\Database\Schema\LitebaseBuilder;
+use Litebase\LitebasePDO;
 
-class LitebaseDBConnection extends Connection
+class LitebaseConnection extends Connection
 {
     /**
      * The active PDO connection.
      *
-     * @var \LitebaseDB\LitebaseDBPDO
+     * @var \Litebase\LitebasePDO
      */
     protected $pdo;
 
@@ -21,11 +22,18 @@ class LitebaseDBConnection extends Connection
      *
      * @return void
      */
-    public function __construct(array $config = [])
+    public function __construct(string $database, string $tablePrefix, array $config = [])
     {
         $this->config = $config;
 
-        parent::__construct(new LitebaseDBPDO($config), '', '', $this->config);
+        $this->pdo = new LitebasePDO($this->config);
+
+        parent::__construct(
+            pdo: $this->pdo,
+            database: $database,
+            tablePrefix: $tablePrefix,
+            config: $this->config
+        );
     }
 
     /**
@@ -39,7 +47,7 @@ class LitebaseDBConnection extends Connection
             $this->useDefaultSchemaGrammar();
         }
 
-        return new SQLiteBuilder($this);
+        return new LitebaseBuilder($this);
     }
 
     /**
@@ -49,7 +57,7 @@ class LitebaseDBConnection extends Connection
      */
     protected function getDefaultSchemaGrammar()
     {
-        return new SQLiteGrammar;
+        return new LitebaseGrammar($this);
     }
 
     /**

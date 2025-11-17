@@ -1,11 +1,11 @@
 <?php
 
-namespace LitebaseDB;
+namespace Litebase\Laravel;
 
 use Illuminate\Database\Connection;
 use Illuminate\Support\ServiceProvider;
 
-class LitebaseDBServiceProvider extends ServiceProvider
+class LitebaseServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -24,12 +24,8 @@ class LitebaseDBServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->singleton(LitebaseDBClient::class, function ($app) {
-            return new LitebaseDBClient($app->config->get('database.connections.litebasedb'));
-        });
-
-        Connection::resolverFor('litebasedb', function ($connection, $database, $prefix, $config) {
-            return new LitebaseDBConnection($config);
+        Connection::resolverFor('litebase', function ($connection, $database, $prefix, $config) {
+            return new LitebaseConnection($database, $prefix, $config);
         });
 
         if ($this->app->runningInConsole()) {

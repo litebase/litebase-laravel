@@ -1,44 +1,41 @@
 {
-    "name": "litebasedb/litebasedb-laravel",
+    "name": "litebase/litebase-laravel",
     "authors": [
         {
-            "name": "Thiery Laverdure",
-            "email": "thiery@spacestud.io"
+            "name": "Litebase",
+            "email": "dev@litebase.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "LitebaseDB\\": "src/"
+            "Litebase\\Laravel\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "LitebaseDB\\Tests\\": "tests"
+            "Tests\\": "tests"
         }
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../litebase-php"
-        }
-    ],
     "require": {
-        "php": "^8.0",
-        "guzzlehttp/guzzle": "^7.2",
-        "illuminate/support": "^8.0|^9.0",
-        "litebasedb/litebasedb-php": "dev-develop"
+        "php": "^8.4",
+        "illuminate/support": "^11.0|^12.0",
+        "litebase/litebase-php": "^0.5.0"
     },
     "require-dev": {
-        "illuminate/database": "^9.0",
-        "orchestra/testbench": "^7.0",
-        "phpunit/phpunit": "^9.5.10"
+        "illuminate/database": "^11.0|^12.0",
+        "orchestra/pest-plugin-testbench": "4.x-dev",
+        "orchestra/testbench": "^10.6",
+        "pestphp/pest": "^4.1"
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
@@ -47,7 +44,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "LitebaseDB\\LitebaseDBServiceProvider"
+                "Litebase\\LitebaseServiceProvider"
             ]
         }
     }

@@ -1,30 +1,20 @@
 <?php
 
-namespace LitebaseDB\Tests;
+namespace Tests;
 
-use Orchestra\Testbench\TestCase as TestbenchTestCase;
-use LitebaseDB\LitebaseDBServiceProvider;
+use Litebase\Laravel\LitebaseServiceProvider;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 
-class TestCase extends TestbenchTestCase
+class TestCase extends \Orchestra\Testbench\TestCase
 {
-    public function afterSetup()
-    {
-        # code...
-    }
-
-    public function afterTest()
-    {
-        # code...
-    }
+    use WithWorkbench;
 
     public function getEnvironmentSetup($app)
     {
-        parent::getEnvironmentSetUp($app);
-
-        $app['config']->set('database.connections.litebasedb', [
-            'driver' => 'litebasedb',
-            'database' => 'test',
-            'host' => 'us-east-1.litebase.test',
+        $app['config']->set('database.connections.litebase', [
+            'driver' => 'litebase',
+            'database' => 'test/main',
+            'host' => 'http://localhost:8888',
             'access_key_id' => 'key',
             'access_key_secret' => 'secret',
         ]);
@@ -32,18 +22,6 @@ class TestCase extends TestbenchTestCase
 
     protected function getPackageProviders($app)
     {
-        return [LitebaseDBServiceProvider::class];
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->afterSetup();
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->afterTest();
+        return [LitebaseServiceProvider::class];
     }
 }

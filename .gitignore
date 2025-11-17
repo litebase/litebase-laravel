@@ -5,5 +5,4 @@ docs
 vendor
 coverage
 .phpunit.result.cache
-src/LitebaseServiceProvider.php
-.phpunit.result.cache
+.vscode
