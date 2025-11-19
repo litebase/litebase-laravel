@@ -15,8 +15,10 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'driver' => 'litebase',
             'database' => 'test/main',
             'host' => 'http://localhost:8888',
-            'access_key_id' => 'key',
-            'access_key_secret' => 'secret',
+            'username' => 'root',
+            'password' => 'password',
+            'host' => '127.0.0.1',
+            'port' => '8888',
         ]);
     }
 

@@ -4,12 +4,27 @@ namespace Litebase\Laravel;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
+use Litebase\ApiClient;
+use Litebase\Configuration;
+use Litebase\LitebaseClient;
+use Litebase\LitebasePDO;
 use Litebase\Laravel\Database\Schema\Grammars\LitebaseGrammar;
 use Litebase\Laravel\Database\Schema\LitebaseBuilder;
-use Litebase\LitebasePDO;
 
 class LitebaseConnection extends Connection
 {
+    /**
+     * The Litebase API client.
+     *
+     * @var \Litebase\ApiClient
+     */
+    protected $apiClient;
+
+    /**
+     * The Litebase configuration instance.
+     */
+    protected Configuration $configuration;
+
     /**
      * The active PDO connection.
      *
@@ -26,7 +41,9 @@ class LitebaseConnection extends Connection
     {
         $this->config = $config;
 
-        $this->pdo = new LitebasePDO($this->config);
+        $this->configuration = Configuration::create($this->config);
+        $this->apiClient = new ApiClient($this->configuration);
+        $this->pdo = new LitebasePDO(new LitebaseClient($this->configuration));
 
         parent::__construct(
             pdo: $this->pdo,
@@ -34,6 +51,16 @@ class LitebaseConnection extends Connection
             tablePrefix: $tablePrefix,
             config: $this->config
         );
+    }
+
+    /**
+     * Get the Litebase API client instance.
+     *
+     * @return \Litebase\ApiClient
+     */
+    public function getApiClient()
+    {
+        return $this->apiClient;
     }
 
     /**

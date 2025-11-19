@@ -3,6 +3,8 @@
 namespace Litebase\Laravel\Database\Schema;
 
 use Illuminate\Database\Schema\SQLiteBuilder;
+use Litebase\OpenAPI\Model\DatabaseStoreRequest;
+use Litebase\OpenAPI\Model\GetDatabase200Response;
 
 class LitebaseBuilder extends SQLiteBuilder
 {
@@ -14,7 +16,47 @@ class LitebaseBuilder extends SQLiteBuilder
      */
     public function createDatabase($name)
     {
-        throw new \Exception('Not implemented');
+        /** @var \Litebase\ApiClient $client */
+        $client = $this->connection->getApiClient();
+
+        try {
+            $client->database()->createDatabase(
+                new DatabaseStoreRequest(['name' => $name])
+            );
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Drop a database from the schema if the database exists.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function dropDatabaseIfExists($name)
+    {
+        /** @var \Litebase\ApiClient $client */
+        $client = $this->connection->getApiClient();
+
+        try {
+            // Check if database exists first
+            $response = $client->database()->getDatabase($name);
+
+            if (!$response instanceof GetDatabase200Response) {
+                return false;
+            }
+
+            // Drop the database
+            $client->database()->deleteDatabase($name);
+
+            return true;
+        } catch (\Exception $e) {
+            // If database doesn't exist or any error occurs, return false
+            return false;
+        }
     }
 
     /**
@@ -26,31 +68,26 @@ class LitebaseBuilder extends SQLiteBuilder
     {
         $tables = $this->connection->select("select name from sqlite_master where type = 'table' and name not like 'sqlite_%'");
 
-        collect($tables)->each(function ($table) {
+        foreach ($tables as $table) {
             $this->connection->statement(
                 sprintf('drop table if exists %s', $this->connection->getSchemaGrammar()->wrapTable($table['name']))
             );
-        });
+        }
     }
 
     /**
-     * Drop a database from the schema if the database exists.
+     * Drop all views from the database.
      *
-     * @param  string  $name
-     * @return bool
+     * @return void
      */
-    // public function dropDatabaseIfExists($name)
-    // {
-    //     throw new \Exception('Not implemented');
-    // }
+    public function dropAllViews()
+    {
+        $views = $this->connection->select("select name from sqlite_master where type = 'view'");
 
-    /**
- * Empty the database file.
- *
- * @return void
- */
-    // public function refreshDatabaseFile($path = null)
-    // {
-    //     throw new \Exception('Not implemented');
-    // }
+        foreach ($views as $view) {
+            $this->connection->statement(
+                sprintf('drop view if exists %s', $this->connection->getSchemaGrammar()->wrapTable($view['name']))
+            );
+        }
+    }
 }

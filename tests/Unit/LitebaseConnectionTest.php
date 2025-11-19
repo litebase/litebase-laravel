@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
+use Litebase\ApiClient;
 use Litebase\Laravel\Database\Schema\Grammars\LitebaseGrammar;
 use Litebase\Laravel\Database\Schema\LitebaseBuilder;
 use Litebase\Laravel\LitebaseConnection;
@@ -153,4 +154,19 @@ test('schema builder uses the same connection instance', function () {
     $builder = $connection->getSchemaBuilder();
 
     expect($builder->getConnection())->toBe($connection);
+});
+
+test('it creates an API client instance', function () {
+    $connection = new LitebaseConnection(
+        database: 'test/main',
+        tablePrefix: '',
+        config: [
+            'host' => '127.0.0.1',
+            'port' => '8888',
+            'username' => 'root',
+            'password' => 'password',
+        ]
+    );
+
+    expect($connection->getApiClient())->toBeInstanceOf(ApiClient::class);
 });
