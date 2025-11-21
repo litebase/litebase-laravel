@@ -1,5 +1,7 @@
 # Litebase Laravel
 
+[![tests](https://github.com/litebase/litebase-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/litebase/litebase-laravel/actions/workflows/tests.yml)
+
 A Laravel database driver for [Litebase](https://github.com/litebase/litebase), an open source distributed database built on SQLite, distributed file systems, and object storage.
 
 ## Installation
