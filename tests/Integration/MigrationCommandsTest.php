@@ -26,7 +26,7 @@ beforeAll(function () {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {
@@ -171,7 +171,7 @@ PHP;
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His').'1';
+        $timestamp = date('Y_m_d_His') . '1';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_test_products_table.php";
 
         $migrationContent = <<<'PHP'
@@ -489,7 +489,7 @@ PHP;
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His').'2';
+        $timestamp = date('Y_m_d_His') . '2';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_test_users_refresh.php";
 
         $migrationContent = <<<'PHP'
@@ -561,7 +561,7 @@ PHP;
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His').'3';
+        $timestamp = date('Y_m_d_His') . '3';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_fresh_test_table.php";
 
         $migrationContent = <<<'PHP'

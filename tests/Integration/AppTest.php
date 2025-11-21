@@ -25,7 +25,7 @@ beforeAll(function () use ($client) {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {
@@ -72,7 +72,7 @@ describe('App Test', function () {
             ->getSchemaBuilder()
             ->getTables();
 
-        expect(in_array('users', array_map(fn ($table) => $table['name'], $tables)))->toBeTrue();
+        expect(in_array('users', array_map(fn($table) => $table['name'], $tables)))->toBeTrue();
     });
 
     it('can read and write data', function () {
@@ -146,7 +146,7 @@ describe('App Test', function () {
             $databases = $client->database()->listDatabases();
 
             /** @phpstan-ignore-next-line */
-            $databaseNames = array_map(fn ($db) => $db['databaseName'], $databases->getData());
+            $databaseNames = array_map(fn($db) => $db['databaseName'], $databases->getData());
             expect($databaseNames)->not->toContain('test_drop');
         } catch (\Exception $e) {
             // If method doesn't exist or throws, we'll need to implement it
