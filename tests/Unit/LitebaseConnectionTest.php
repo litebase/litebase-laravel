@@ -170,3 +170,33 @@ test('it creates an API client instance', function () {
 
     expect($connection->getApiClient())->toBeInstanceOf(ApiClient::class);
 });
+
+test('it returns a server version', function () {
+    $connection = new LitebaseConnection(
+        database: 'test/main',
+        tablePrefix: '',
+        config: [
+            'host' => '127.0.0.1',
+            'port' => '8888',
+            'username' => 'root',
+            'password' => 'password',
+        ]
+    );
+
+    expect($connection->getServerVersion())->toBeString();
+});
+
+test('thread count returns null', function () {
+    $connection = new LitebaseConnection(
+        database: 'test/main',
+        tablePrefix: '',
+        config: [
+            'host' => '127.0.0.1',
+            'port' => '8888',
+            'username' => 'root',
+            'password' => 'password',
+        ]
+    );
+
+    expect($connection->threadCount())->toBeNull();
+});

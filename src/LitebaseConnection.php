@@ -12,6 +12,7 @@ use Litebase\LitebasePDO;
 use Litebase\Laravel\Database\Schema\Grammars\LitebaseGrammar;
 use Litebase\Laravel\Database\Schema\LitebaseBuilder;
 use Litebase\Laravel\Database\Schema\LitebaseSchemaState;
+use PDO;
 
 class LitebaseConnection extends Connection
 {
@@ -118,5 +119,15 @@ class LitebaseConnection extends Connection
     public function getSchemaState(?Filesystem $files = null, ?callable $processFactory = null)
     {
         return new LitebaseSchemaState($this, $files, $processFactory);
+    }
+
+    /**
+     * Get the server version for the connection.
+     *
+     * @return string
+     */
+    public function getServerVersion(): string
+    {
+        return $this->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
     }
 }

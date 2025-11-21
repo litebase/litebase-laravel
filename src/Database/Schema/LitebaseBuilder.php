@@ -9,6 +9,13 @@ use Litebase\OpenAPI\Model\GetDatabase200Response;
 class LitebaseBuilder extends SQLiteBuilder
 {
     /**
+     * The schema grammar instance.
+     *
+     * @var \Litebase\Laravel\Database\Schema\Grammars\LitebaseGrammar
+     */
+    protected $grammar;
+
+    /**
      * Create a database in the schema.
      *
      * @param  string  $name
@@ -99,5 +106,18 @@ class LitebaseBuilder extends SQLiteBuilder
                 )
             );
         }
+    }
+
+    /** @inheritDoc */
+    public function getTables($schema = null)
+    {
+        return $this->connection->getPostProcessor()->processTables(
+            $this->connection->selectFromWriteConnection(
+                $this->grammar->compileTables(
+                    schema: $schema,
+                    withSize: true,
+                )
+            )
+        );
     }
 }
