@@ -1,4 +1,4 @@
-# Litebase Laravel
+# Litebase Laravel SDK (Alpha)
 
 [![tests](https://github.com/litebase/litebase-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/litebase/litebase-laravel/actions/workflows/tests.yml)
 
