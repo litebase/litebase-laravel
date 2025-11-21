@@ -66,11 +66,16 @@ class LitebaseBuilder extends SQLiteBuilder
      */
     public function dropAllTables()
     {
-        $tables = $this->connection->select("select name from sqlite_master where type = 'table' and name not like 'sqlite_%'");
+        $tables = $this->connection->select(
+            "select name from sqlite_master where type = 'table' and name not like 'sqlite_%'"
+        );
 
         foreach ($tables as $table) {
             $this->connection->statement(
-                sprintf('drop table if exists %s', $this->connection->getSchemaGrammar()->wrapTable($table['name']))
+                sprintf(
+                    'drop table if exists %s',
+                    $this->connection->getSchemaGrammar()->wrapTable($table['name']),
+                )
             );
         }
     }
@@ -82,11 +87,16 @@ class LitebaseBuilder extends SQLiteBuilder
      */
     public function dropAllViews()
     {
-        $views = $this->connection->select("select name from sqlite_master where type = 'view'");
+        $views = $this->connection->select(
+            "select name from sqlite_master where type = 'view'"
+        );
 
         foreach ($views as $view) {
             $this->connection->statement(
-                sprintf('drop view if exists %s', $this->connection->getSchemaGrammar()->wrapTable($view['name']))
+                sprintf(
+                    'drop view if exists %s',
+                    $this->connection->getSchemaGrammar()->wrapTable($view['name']),
+                )
             );
         }
     }

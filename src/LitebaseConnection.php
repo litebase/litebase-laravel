@@ -4,12 +4,14 @@ namespace Litebase\Laravel;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Processors\SQLiteProcessor;
+use Illuminate\Filesystem\Filesystem;
 use Litebase\ApiClient;
 use Litebase\Configuration;
 use Litebase\LitebaseClient;
 use Litebase\LitebasePDO;
 use Litebase\Laravel\Database\Schema\Grammars\LitebaseGrammar;
 use Litebase\Laravel\Database\Schema\LitebaseBuilder;
+use Litebase\Laravel\Database\Schema\LitebaseSchemaState;
 
 class LitebaseConnection extends Connection
 {
@@ -64,6 +66,14 @@ class LitebaseConnection extends Connection
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getDriverTitle()
+    {
+        return 'Litebase';
+    }
+
+    /**
      * Get a schema builder instance for the connection.
      *
      * @return \Illuminate\Database\Schema\SQLiteBuilder
@@ -95,5 +105,18 @@ class LitebaseConnection extends Connection
     protected function getDefaultPostProcessor()
     {
         return new SQLiteProcessor;
+    }
+
+    /**
+     * Get the schema state for the connection.
+     *
+     * @param  \Illuminate\Filesystem\Filesystem|null  $files
+     * @param  callable|null  $processFactory
+     *
+     * @throws \RuntimeException
+     */
+    public function getSchemaState(?Filesystem $files = null, ?callable $processFactory = null)
+    {
+        return new LitebaseSchemaState($this, $files, $processFactory);
     }
 }
