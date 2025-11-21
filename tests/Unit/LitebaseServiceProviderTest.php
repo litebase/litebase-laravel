@@ -41,3 +41,10 @@ test('multiple litebase connections can be created', function () {
         ->and($connection2)->toBeInstanceOf(LitebaseConnection::class)
         ->and($connection1)->not->toBe($connection2);
 });
+
+test('litebase db command is registered', function () {
+    $commands = \Illuminate\Support\Facades\Artisan::all();
+
+    expect($commands)->toHaveKey('litebase:db');
+    expect($commands['litebase:db'])->toBeInstanceOf(\Litebase\Laravel\Console\LitebaseDbCommand::class);
+});

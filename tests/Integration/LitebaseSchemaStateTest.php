@@ -91,14 +91,15 @@ describe('LitebaseSchemaState', function () {
         $connection = app()->db->connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
+        // Clean up first
+        $builder->dropIfExists('migrations');
+
         // Create migrations table
-        if (!$builder->hasTable('migrations')) {
-            $builder->create('migrations', function ($table) {
-                $table->id();
-                $table->string('migration');
-                $table->integer('batch');
-            });
-        }
+        $builder->create('migrations', function ($table) {
+            $table->id();
+            $table->string('migration');
+            $table->integer('batch');
+        });
 
         // Insert migration records
         $connection->table('migrations')->insert([

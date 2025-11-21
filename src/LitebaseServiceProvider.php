@@ -3,7 +3,9 @@
 namespace Litebase\Laravel;
 
 use Illuminate\Database\Connection;
+use Illuminate\Database\Console\DbCommand;
 use Illuminate\Support\ServiceProvider;
+use Litebase\Laravel\Console\LitebaseDbCommand;
 
 class LitebaseServiceProvider extends ServiceProvider
 {
@@ -29,7 +31,9 @@ class LitebaseServiceProvider extends ServiceProvider
         });
 
         if ($this->app->runningInConsole()) {
-            // $this->commands([]);
+            $this->commands([
+                LitebaseDbCommand::class,
+            ]);
         }
     }
 }
