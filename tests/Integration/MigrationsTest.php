@@ -2,14 +2,14 @@
 
 namespace Tests\Integration;
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Litebase\ApiClient;
 use Litebase\Configuration;
 use Litebase\OpenAPI\Model\DatabaseStoreRequest;
 
 beforeAll(function () {
-    $configuration = new Configuration();
+    $configuration = new Configuration;
 
     $configuration
         ->setHost('127.0.0.1')
@@ -24,7 +24,7 @@ beforeAll(function () {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {

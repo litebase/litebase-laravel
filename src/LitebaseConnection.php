@@ -7,11 +7,11 @@ use Illuminate\Database\Query\Processors\SQLiteProcessor;
 use Illuminate\Filesystem\Filesystem;
 use Litebase\ApiClient;
 use Litebase\Configuration;
-use Litebase\LitebaseClient;
-use Litebase\LitebasePDO;
 use Litebase\Laravel\Database\Schema\Grammars\LitebaseGrammar;
 use Litebase\Laravel\Database\Schema\LitebaseBuilder;
 use Litebase\Laravel\Database\Schema\LitebaseSchemaState;
+use Litebase\LitebaseClient;
+use Litebase\LitebasePDO;
 use PDO;
 
 class LitebaseConnection extends Connection
@@ -38,13 +38,28 @@ class LitebaseConnection extends Connection
     /**
      * Create a new database connection instance.
      *
+     * @param  array<string, mixed>  $config
      * @return void
      */
     public function __construct(string $database, string $tablePrefix, array $config = [])
     {
         $this->config = $config;
 
-        $this->configuration = Configuration::create($this->config);
+        /** @var array<string, string|null> $configForLitebase */
+        $configForLitebase = array_map(function ($value) {
+            if (is_null($value)) {
+                return null;
+            }
+            if (is_string($value)) {
+                return $value;
+            }
+            if (is_scalar($value)) {
+                return (string) $value;
+            }
+
+            return null;
+        }, $this->config);
+        $this->configuration = Configuration::create($configForLitebase);
         $this->apiClient = new ApiClient($this->configuration);
         $this->pdo = new LitebasePDO(new LitebaseClient($this->configuration));
 
@@ -81,9 +96,7 @@ class LitebaseConnection extends Connection
      */
     public function getSchemaBuilder()
     {
-        if (is_null($this->schemaGrammar)) {
-            $this->useDefaultSchemaGrammar();
-        }
+        $this->useDefaultSchemaGrammar();
 
         return new LitebaseBuilder($this);
     }
@@ -111,8 +124,7 @@ class LitebaseConnection extends Connection
     /**
      * Get the schema state for the connection.
      *
-     * @param  \Illuminate\Filesystem\Filesystem|null  $files
-     * @param  callable|null  $processFactory
+     * @return \Litebase\Laravel\Database\Schema\LitebaseSchemaState
      *
      * @throws \RuntimeException
      */
@@ -123,11 +135,12 @@ class LitebaseConnection extends Connection
 
     /**
      * Get the server version for the connection.
-     *
-     * @return string
      */
     public function getServerVersion(): string
     {
-        return $this->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
+        $version = $this->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
+        assert(is_string($version));
+
+        return $version;
     }
 }

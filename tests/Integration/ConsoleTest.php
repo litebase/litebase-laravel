@@ -3,12 +3,13 @@
 namespace Tests\Integration;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Litebase\ApiClient;
 use Litebase\Configuration;
 use Litebase\OpenAPI\Model\DatabaseStoreRequest;
 
 beforeAll(function () {
-    $configuration = new Configuration();
+    $configuration = new Configuration;
 
     $configuration
         ->setHost('127.0.0.1')
@@ -23,7 +24,7 @@ beforeAll(function () {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {
@@ -46,7 +47,7 @@ afterAll(function () {
 
 describe('Litebase Laravel Console Integration', function () {
     test('connection has required methods for db:show', function () {
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
 
         // Verify the connection has required methods
         expect($connection->getDriverTitle())->toBe('Litebase');
@@ -55,7 +56,7 @@ describe('Litebase Laravel Console Integration', function () {
     });
 
     test('schema builder provides required data for db:show', function () {
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Create a test table
@@ -68,6 +69,7 @@ describe('Litebase Laravel Console Integration', function () {
         // Verify getTables works (required by db:show)
         $tables = $builder->getTables();
         expect($tables)->toBeArray();
+        /** @var array<int, array{name: string}> $tables */
         expect(collect($tables)->pluck('name')->toArray())->toContain('console_test_table');
 
         // Clean up
@@ -75,7 +77,7 @@ describe('Litebase Laravel Console Integration', function () {
     });
 
     test('db:show command works with litebase', function () {
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Create a test table for the command to display
@@ -110,7 +112,7 @@ describe('Litebase Laravel Console Integration', function () {
     });
 
     test('litebase:db command can execute queries', function () {
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Create a test table
@@ -134,7 +136,7 @@ describe('Litebase Laravel Console Integration', function () {
     });
 
     test('schema:dump command works with litebase', function () {
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Create a test table
@@ -160,7 +162,7 @@ describe('Litebase Laravel Console Integration', function () {
         $dumpPath = database_path('schema/litebase-test-dump.sql');
 
         // Ensure directory exists
-        if (!is_dir(dirname($dumpPath))) {
+        if (! is_dir(dirname($dumpPath))) {
             mkdir(dirname($dumpPath), 0755, true);
         }
 
@@ -205,7 +207,7 @@ describe('Litebase Laravel Console Integration', function () {
     });
 
     test('db:table command works with litebase', function () {
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Create a test table with various column types and indexes
@@ -244,7 +246,7 @@ describe('Litebase Laravel Console Integration', function () {
     });
 
     test('db:wipe command works with litebase', function () {
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Create some test tables and views

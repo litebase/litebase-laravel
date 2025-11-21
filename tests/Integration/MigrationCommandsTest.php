@@ -2,15 +2,16 @@
 
 namespace Tests\Integration;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Litebase\ApiClient;
 use Litebase\Configuration;
 use Litebase\OpenAPI\Model\DatabaseStoreRequest;
 
 beforeAll(function () {
-    $configuration = new Configuration();
+    $configuration = new Configuration;
 
     $configuration
         ->setHost('127.0.0.1')
@@ -25,7 +26,7 @@ beforeAll(function () {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {
@@ -74,7 +75,7 @@ describe('Laravel Migration Commands', function () {
         // Create a simple migration file for testing
         $migrationPath = database_path('migrations');
 
-        if (!is_dir($migrationPath)) {
+        if (! is_dir($migrationPath)) {
             mkdir($migrationPath, 0755, true);
         }
 
@@ -126,10 +127,10 @@ PHP;
             expect(Schema::connection('litebase')->hasTable('test_users'))->toBeTrue();
 
             // Verify migration was recorded
-            $connection = app()->db->connection('litebase');
+            $connection = DB::connection('litebase');
             $migrations = $connection->table('migrations')->get();
             expect($migrations)->not->toBeEmpty();
-            expect($migrations[0]['migration'])->toContain('create_test_users_table');
+            expect($migrations[0]->migration)->toContain('create_test_users_table');
         } finally {
             // Clean up migration file
             if (file_exists($migrationFile)) {
@@ -146,7 +147,7 @@ PHP;
             $table->integer('batch');
         });
 
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $connection->table('migrations')->insert([
             'migration' => '2024_01_01_000000_create_test_table',
             'batch' => 1,
@@ -166,11 +167,11 @@ PHP;
     test('migrate --pretend shows SQL without executing', function () {
         $migrationPath = database_path('migrations');
 
-        if (!is_dir($migrationPath)) {
+        if (! is_dir($migrationPath)) {
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His') . '1';
+        $timestamp = date('Y_m_d_His').'1';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_test_products_table.php";
 
         $migrationContent = <<<'PHP'
@@ -228,7 +229,7 @@ PHP;
         // First run a migration to have something to rollback
         $migrationPath = database_path('migrations');
 
-        if (!is_dir($migrationPath)) {
+        if (! is_dir($migrationPath)) {
             mkdir($migrationPath, 0755, true);
         }
 
@@ -290,7 +291,7 @@ PHP;
     test('migrate:rollback with --step option rolls back specific number of migrations', function () {
         $migrationPath = database_path('migrations');
 
-        if (!is_dir($migrationPath)) {
+        if (! is_dir($migrationPath)) {
             mkdir($migrationPath, 0755, true);
         }
 
@@ -337,7 +338,7 @@ PHP;
                 '--force' => true,
             ]);
 
-            $connection = app()->db->connection('litebase');
+            $connection = DB::connection('litebase');
             $allMigrations = $connection->table('migrations')->where('migration', 'like', '%step_migration%')->get();
             $initialCount = $allMigrations->count();
             expect($initialCount)->toBeGreaterThanOrEqual(3);
@@ -390,7 +391,7 @@ PHP;
             $table->string('title');
         });
 
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
         $connection->table('migrations')->insert([
             ['migration' => '2024_01_01_000000_create_test_users_table', 'batch' => 1],
             ['migration' => '2024_01_02_000000_create_test_posts_table', 'batch' => 1],
@@ -399,7 +400,7 @@ PHP;
         // Create migration files
         $migrationPath = database_path('migrations');
 
-        if (!is_dir($migrationPath)) {
+        if (! is_dir($migrationPath)) {
             mkdir($migrationPath, 0755, true);
         }
 
@@ -473,18 +474,22 @@ PHP;
             $migrations = $connection->table('migrations')->get();
             expect($migrations)->toBeEmpty();
         } finally {
-            if (file_exists($migration1)) unlink($migration1);
-            if (file_exists($migration2)) unlink($migration2);
+            if (file_exists($migration1)) {
+                unlink($migration1);
+            }
+            if (file_exists($migration2)) {
+                unlink($migration2);
+            }
         }
     });
 
     test('migrate:refresh resets and re-runs all migrations', function () {
         $migrationPath = database_path('migrations');
-        if (!is_dir($migrationPath)) {
+        if (! is_dir($migrationPath)) {
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His') . '2';
+        $timestamp = date('Y_m_d_His').'2';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_test_users_refresh.php";
 
         $migrationContent = <<<'PHP'
@@ -552,11 +557,11 @@ PHP;
 
         // Create a migration file
         $migrationPath = database_path('migrations');
-        if (!is_dir($migrationPath)) {
+        if (! is_dir($migrationPath)) {
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His') . '3';
+        $timestamp = date('Y_m_d_His').'3';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_fresh_test_table.php";
 
         $migrationContent = <<<'PHP'

@@ -1,0 +1,50 @@
+name: pint
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  fetch-depth: 0
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  tools: composer:v2
+                  coverage: xdebug
+
+            - name: Install Dependencies
+              run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            - name: Run Pint
+              run: composer run pint
+
+            - name: Check for changes
+              id: verify-changed-files
+              run: |
+                  if [ -n "$(git status --porcelain)" ]; then
+                      echo "changed=true" >> $GITHUB_OUTPUT
+                      echo "Changes detected after Pint"
+                      git status --porcelain
+                  else
+                      echo "changed=false" >> $GITHUB_OUTPUT
+                      echo "No changes detected after Pint"
+                  fi
+
+            - name: Commit and Push changes
+              if: steps.verify-changed-files.outputs.changed == 'true'
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git add -u
+                  git commit -m "Apply PHP Pint fixes"
+                  git push

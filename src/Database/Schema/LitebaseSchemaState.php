@@ -10,7 +10,6 @@ class LitebaseSchemaState extends SchemaState
     /**
      * Dump the database's schema into a file.
      *
-     * @param  \Illuminate\Database\Connection  $connection
      * @param  string  $path
      * @return void
      */
@@ -18,17 +17,17 @@ class LitebaseSchemaState extends SchemaState
     {
         // Execute the schema query directly via the connection
         $schema = $this->connection->select(
-            "SELECT sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY tbl_name, type DESC, name"
+            'SELECT sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY tbl_name, type DESC, name'
         );
 
         // Build the schema dump with proper formatting
         $schemaDump = collect($schema)
-            ->map(fn($item) => is_array($item) ? $item['sql'] : $item->sql)
-            ->filter(fn($sql) => !preg_match('/CREATE TABLE sqlite_.+/i', $sql))
-            ->map(fn($sql) => $sql . ';')
-            ->implode(PHP_EOL . PHP_EOL);
+            ->map(fn ($item) => is_array($item) ? $item['sql'] : $item->sql)
+            ->filter(fn ($sql) => ! preg_match('/CREATE TABLE sqlite_.+/i', $sql))
+            ->map(fn ($sql) => $sql.';')
+            ->implode(PHP_EOL.PHP_EOL);
 
-        $this->files->put($path, $schemaDump . PHP_EOL);
+        $this->files->put($path, $schemaDump.PHP_EOL);
 
         if ($this->hasMigrationTable()) {
             $this->appendMigrationData($path);
@@ -38,7 +37,6 @@ class LitebaseSchemaState extends SchemaState
     /**
      * Append the migration data to the schema dump.
      *
-     * @param  string  $path
      * @return void
      */
     protected function appendMigrationData(string $path)
@@ -56,7 +54,7 @@ class LitebaseSchemaState extends SchemaState
 
         foreach ($migrations as $migration) {
             // Handle both array and object results
-            $migrationData = is_array($migration) ? $migration : get_object_vars($migration);
+            $migrationData = get_object_vars($migration);
 
             $values = collect($migrationData)
                 ->map(function ($value) {
@@ -68,7 +66,15 @@ class LitebaseSchemaState extends SchemaState
                         return $value;
                     }
 
-                    return "'" . str_replace("'", "''", $value) . "'";
+                    if (is_string($value)) {
+                        return "'".str_replace("'", "''", $value)."'";
+                    }
+
+                    if (is_scalar($value)) {
+                        return "'".str_replace("'", "''", (string) $value)."'";
+                    }
+
+                    return 'NULL';
                 })
                 ->values()
                 ->implode(', ');
@@ -76,7 +82,7 @@ class LitebaseSchemaState extends SchemaState
             $insertStatements[] = "INSERT INTO {$migrationTable} VALUES ({$values});";
         }
 
-        $this->files->append($path, PHP_EOL . implode(PHP_EOL, $insertStatements) . PHP_EOL);
+        $this->files->append($path, PHP_EOL.implode(PHP_EOL, $insertStatements).PHP_EOL);
     }
 
     /**
@@ -96,7 +102,7 @@ class LitebaseSchemaState extends SchemaState
         foreach ($statements as $statement) {
             $statement = trim($statement);
 
-            if (!empty($statement)) {
+            if (! empty($statement)) {
                 $this->connection->statement($statement);
             }
         }
@@ -105,13 +111,12 @@ class LitebaseSchemaState extends SchemaState
     /**
      * Parse SQL statements from a file.
      *
-     * @param  string  $sql
-     * @return array
+     * @return array<int, string>
      */
     protected function parseSqlStatements(string $sql): array
     {
         // Remove comments
-        $sql = preg_replace('/--.*$/m', '', $sql);
+        $sql = preg_replace('/--.*$/m', '', $sql) ?? $sql;
 
         // Split by semicolons
         $statements = explode(';', $sql);

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
+use Illuminate\Support\Facades\DB;
 use Litebase\ApiClient;
 use Litebase\Configuration;
 use Litebase\OpenAPI\Model\DatabaseStoreRequest;
 
-$configuration = new Configuration();
+$configuration = new Configuration;
 
 $configuration
     ->setHost('127.0.0.1')
@@ -24,7 +25,7 @@ beforeAll(function () use ($client) {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {
@@ -56,8 +57,7 @@ describe('App Test', function () {
             'port' => '8888',
         ]]);
 
-
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
 
         $connection
             ->getSchemaBuilder()
@@ -72,7 +72,7 @@ describe('App Test', function () {
             ->getSchemaBuilder()
             ->getTables();
 
-        expect(in_array('users', array_map(fn($table) => $table['name'], $tables)))->toBeTrue();
+        expect(in_array('users', array_map(fn ($table) => $table['name'], $tables)))->toBeTrue();
     });
 
     it('can read and write data', function () {
@@ -85,7 +85,7 @@ describe('App Test', function () {
             'port' => '8888',
         ]]);
 
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
 
         // Create table if not exists
         $connection->getSchemaBuilder()->dropIfExists('users');
@@ -106,12 +106,12 @@ describe('App Test', function () {
         $users = $connection->table('users')->get();
 
         expect($users)->toHaveCount(1);
-        expect($users[0]['name'])->toBe('John Doe');
-        expect($users[0]['email'])->toBe('john@example.com');
+        expect($users[0]->name)->toBe('John Doe');
+        expect($users[0]->email)->toBe('john@example.com');
     });
 
     it('can drop database if exists', function () {
-        $configuration = new Configuration();
+        $configuration = new Configuration;
         $configuration
             ->setHost('127.0.0.1')
             ->setPort('8888')
@@ -133,7 +133,7 @@ describe('App Test', function () {
             new DatabaseStoreRequest(['name' => 'test_drop'])
         );
 
-        $connection = app()->db->connection('litebase');
+        $connection = DB::connection('litebase');
 
         // Try to drop the database using the schema builder
         try {
@@ -145,13 +145,16 @@ describe('App Test', function () {
             // Verify the database was actually dropped
             $databases = $client->database()->listDatabases();
 
-            $databaseNames = array_map(fn($db) => $db['databaseName'], $databases->getData());
+            /** @phpstan-ignore-next-line */
+            $databaseNames = array_map(fn ($db) => $db['databaseName'], $databases->getData());
             expect($databaseNames)->not->toContain('test_drop');
         } catch (\Exception $e) {
             // If method doesn't exist or throws, we'll need to implement it
-            expect($e->getMessage())->toContain('Not implemented')
-                ->or($e->getMessage())->toContain('does not exist')
-                ->or($e->getMessage())->toContain('not supported');
+            $message = $e->getMessage();
+            $isExpected = str_contains($message, 'Not implemented') ||
+                str_contains($message, 'does not exist') ||
+                str_contains($message, 'not supported');
+            expect($isExpected)->toBeTrue();
 
             // Clean up - drop the database manually using SDK
             try {

@@ -3,7 +3,6 @@
 namespace Litebase\Laravel;
 
 use Illuminate\Database\Connection;
-use Illuminate\Database\Console\DbCommand;
 use Illuminate\Support\ServiceProvider;
 use Litebase\Laravel\Console\LitebaseDbCommand;
 

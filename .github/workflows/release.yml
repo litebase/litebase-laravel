@@ -1,0 +1,81 @@
+name: Release
+
+on:
+    workflow_dispatch:
+    push:
+        tags:
+            - "v*.*.*"
+
+permissions:
+    id-token: write
+    contents: write
+    packages: write
+    attestations: write
+
+env:
+    PROJECT_NAME: litebase
+
+jobs:
+    get-version:
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.version.outputs.version }}
+        steps:
+            - name: Get version from tag
+              id: version
+              run: |
+                  VERSION=${GITHUB_REF#refs/tags/}
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    release:
+        needs: [get-version]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+
+            - name: Validate composer.json
+              run: composer validate --strict
+
+            - name: Create GitHub Release
+              run: |
+                  # Create release with auto-generated notes
+                  gh release create ${{ needs.get-version.outputs.version }} \
+                    --draft \
+                    --title "Litebase PHP ${{ needs.get-version.outputs.version }} (Alpha)" \
+                    --target ${{ github.sha }} \
+                    --generate-notes
+              env:
+                  GH_TOKEN: ${{ github.token }}
+
+            - name: Update release notes with template
+              if: hashFiles('.github/release_template.md') != ''
+              run: |
+                  # Get the auto-generated notes
+                  GENERATED_NOTES=$(gh release view ${{ needs.get-version.outputs.version }} --json body --jq '.body')
+
+                  # Create notes with auto-generated content first, then custom template
+                  echo "## Release Notes" > temp_notes.md
+                  echo "" >> temp_notes.md
+                  echo "$GENERATED_NOTES" >> temp_notes.md
+                  echo "" >> temp_notes.md
+                  echo "---" >> temp_notes.md
+                  echo "" >> temp_notes.md
+
+                  # Get version without 'v' prefix
+                  FLOAT_VERSION=$(echo ${{ needs.get-version.outputs.version }} | sed 's/^v//')
+
+                  # Replace $VERSION in template with actual version
+                  cat .github/release_template.md | sed "s/\$VERSION/$FLOAT_VERSION/g" >> temp_notes.md
+
+                  # Update the release with combined notes
+                  gh release edit ${{ needs.get-version.outputs.version }} --notes-file temp_notes.md
+              env:
+                  GH_TOKEN: ${{ github.token }}

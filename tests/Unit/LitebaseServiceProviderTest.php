@@ -2,10 +2,11 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Support\Facades\DB;
 use Litebase\Laravel\LitebaseConnection;
 
 test('the connection can be resolved', function () {
-    expect(app()->db->connection('litebase'))
+    expect(DB::connection('litebase'))
         ->toBeInstanceOf(LitebaseConnection::class);
 });
 
@@ -16,7 +17,7 @@ test('connection receives correct parameters', function () {
         'prefix' => 'test_',
     ]]);
 
-    $connection = app()->db->connection('litebase');
+    $connection = DB::connection('litebase');
 
     expect($connection)->toBeInstanceOf(LitebaseConnection::class)
         ->and($connection->getDatabaseName())->toBe('test/main')
@@ -34,8 +35,8 @@ test('multiple litebase connections can be created', function () {
         'database' => 'test/staging',
     ]]);
 
-    $connection1 = app()->db->connection('litebase1');
-    $connection2 = app()->db->connection('litebase2');
+    $connection1 = DB::connection('litebase1');
+    $connection2 = DB::connection('litebase2');
 
     expect($connection1)->toBeInstanceOf(LitebaseConnection::class)
         ->and($connection2)->toBeInstanceOf(LitebaseConnection::class)

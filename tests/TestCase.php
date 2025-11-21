@@ -9,15 +9,19 @@ class TestCase extends \Orchestra\Testbench\TestCase
 {
     use WithWorkbench;
 
-    public function getEnvironmentSetup($app)
+    /**
+     * @param  \Illuminate\Foundation\Application  $app
+     */
+    public function getEnvironmentSetup($app): void
     {
-        $app['config']->set('database.connections.litebase', [
+        /** @var \Illuminate\Contracts\Config\Repository $config */
+        $config = $app['config'];
+        $config->set('database.connections.litebase', [
             'driver' => 'litebase',
             'database' => 'test/main',
             'host' => 'http://localhost:8888',
             'username' => 'root',
             'password' => 'password',
-            'host' => '127.0.0.1',
             'port' => '8888',
         ]);
     }

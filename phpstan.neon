@@ -1,0 +1,14 @@
+parameters:
+    level: 9
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        -
+            message: '#Call to an undefined method Pest\\PendingCalls\\TestCall\|Pest\\Support\\HigherOrderTapProxy::throws\(\)\.$#'
+            path: tests/Integration/LitebaseBuilderTest.php
+        -
+            message: '#^Undefined variable: \$this$#'
+            path: tests/Pest.php
+
+    tmpDir: /tmp/phpstan

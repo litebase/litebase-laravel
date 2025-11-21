@@ -2,12 +2,13 @@
 
 namespace Tests\Integration;
 
+use Illuminate\Support\Facades\DB;
 use Litebase\ApiClient;
 use Litebase\Configuration;
 use Litebase\OpenAPI\Model\DatabaseStoreRequest;
 
 beforeAll(function () {
-    $configuration = new Configuration();
+    $configuration = new Configuration;
 
     $configuration
         ->setHost('127.0.0.1')
@@ -22,7 +23,7 @@ beforeAll(function () {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {
@@ -43,10 +44,10 @@ afterAll(function () {
     LitebaseContainer::stop();
 });
 
-
 describe('LitebaseSchemaState', function () {
     test('it can dump and load the schema state', function () {
-        $connection = app()->db->connection('litebase');
+        /** @var \Litebase\Laravel\LitebaseConnection $connection */
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Create a test table with data
@@ -66,7 +67,7 @@ describe('LitebaseSchemaState', function () {
         $schemaState = $connection->getSchemaState();
 
         // Dump the current schema state to a file
-        $dumpFile = __DIR__ . '/schema_dump.sql';
+        $dumpFile = __DIR__.'/schema_dump.sql';
         $schemaState->dump($connection, $dumpFile);
 
         expect(file_exists($dumpFile))->toBeTrue();
@@ -88,7 +89,8 @@ describe('LitebaseSchemaState', function () {
     });
 
     test('it can dump and load schema with migrations table', function () {
-        $connection = app()->db->connection('litebase');
+        /** @var \Litebase\Laravel\LitebaseConnection $connection */
+        $connection = DB::connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
         // Ensure clean slate - drop if exists
@@ -110,7 +112,7 @@ describe('LitebaseSchemaState', function () {
         $schemaState = $connection->getSchemaState();
 
         // Dump the schema
-        $dumpFile = __DIR__ . '/schema_with_migrations.sql';
+        $dumpFile = __DIR__.'/schema_with_migrations.sql';
         $schemaState->dump($connection, $dumpFile);
 
         $dumpContent = file_get_contents($dumpFile);

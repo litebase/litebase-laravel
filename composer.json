@@ -29,22 +29,27 @@
     "require": {
         "php": "^8.4",
         "illuminate/support": "^11.0|^12.0",
-        "litebase/litebase-php": "^0.5.0"
+        "litebase/litebase-php": "^0.5.4"
     },
     "require-dev": {
         "illuminate/database": "^11.0|^12.0",
+        "laravel/pint": "^1.25",
         "orchestra/pest-plugin-testbench": "4.x-dev",
         "orchestra/testbench": "^10.6",
-        "pestphp/pest": "^4.1"
+        "pestphp/pest": "^4.1",
+        "phpstan/phpstan": "^2.1"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=512M src tests",
+        "pint": "vendor/bin/pint --no-interaction",
+        "test": "vendor/bin/pest tests/Unit",
+        "test-integration": "vendor/bin/pest tests/Integration",
+        "test-coverage": "vendor/bin/pest --coverage-html coverage"
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Litebase\\LitebaseServiceProvider"
+                "Litebase\\Laravel\\LitebaseServiceProvider"
             ]
         }
     }

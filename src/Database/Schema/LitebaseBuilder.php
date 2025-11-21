@@ -23,8 +23,10 @@ class LitebaseBuilder extends SQLiteBuilder
      */
     public function createDatabase($name)
     {
+        /** @var \Litebase\Laravel\LitebaseConnection $connection */
+        $connection = $this->connection;
         /** @var \Litebase\ApiClient $client */
-        $client = $this->connection->getApiClient();
+        $client = $connection->getApiClient();
 
         try {
             $client->database()->createDatabase(
@@ -45,14 +47,16 @@ class LitebaseBuilder extends SQLiteBuilder
      */
     public function dropDatabaseIfExists($name)
     {
+        /** @var \Litebase\Laravel\LitebaseConnection $connection */
+        $connection = $this->connection;
         /** @var \Litebase\ApiClient $client */
-        $client = $this->connection->getApiClient();
+        $client = $connection->getApiClient();
 
         try {
             // Check if database exists first
             $response = $client->database()->getDatabase($name);
 
-            if (!$response instanceof GetDatabase200Response) {
+            if (! $response instanceof GetDatabase200Response) {
                 return false;
             }
 
@@ -108,16 +112,18 @@ class LitebaseBuilder extends SQLiteBuilder
         }
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     public function getTables($schema = null)
     {
-        return $this->connection->getPostProcessor()->processTables(
-            $this->connection->selectFromWriteConnection(
-                $this->grammar->compileTables(
-                    schema: $schema,
-                    withSize: true,
-                )
+        $results = $this->connection->selectFromWriteConnection(
+            $this->grammar->compileTables(
+                schema: $schema,
+                withSize: true,
             )
+        );
+
+        return $this->connection->getPostProcessor()->processTables(
+            array_values($results)
         );
     }
 }

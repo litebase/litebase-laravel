@@ -32,12 +32,29 @@ class LitebaseDbCommand extends Command
      */
     public function handle()
     {
-        $connectionName = $this->argument('connection')
-            ?? $this->laravel['config']['database.default'];
+        $config = $this->laravel->make('config');
+        assert($config instanceof \Illuminate\Contracts\Config\Repository);
+        $connectionName = $this->argument('connection');
 
-        $connection = $this->laravel['db']->connection($connectionName);
+        if (! is_string($connectionName) && ! is_null($connectionName)) {
+            $this->components->error('Invalid connection name.');
 
-        if (!$connection instanceof \Litebase\Laravel\LitebaseConnection) {
+            return Command::FAILURE;
+        }
+
+        $connectionName = $connectionName ?? $config->get('database.default');
+
+        if (! is_string($connectionName)) {
+            $this->components->error('Could not determine database connection name.');
+
+            return Command::FAILURE;
+        }
+
+        $db = $this->laravel->make('db');
+        assert($db instanceof \Illuminate\Database\DatabaseManager);
+        $connection = $db->connection($connectionName);
+
+        if (! $connection instanceof \Litebase\Laravel\LitebaseConnection) {
             $this->components->error(
                 'The specified connection is not a Litebase connection.'
             );
@@ -45,7 +62,7 @@ class LitebaseDbCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->info("Litebase Interactive Session");
+        $this->info('Litebase Interactive Session');
         $this->info("Connection: {$connectionName}");
         $this->info("Database: {$connection->getDatabaseName()}");
         $this->info("Server Version: {$connection->getServerVersion()}");
@@ -59,12 +76,12 @@ class LitebaseDbCommand extends Command
             $prompt = empty($query) ? 'litebase> ' : '       -> ';
             $line = $this->ask($prompt);
 
-            if ($line === null || trim(strtolower($line)) === 'exit' || trim(strtolower($line)) === 'quit') {
+            if (! is_string($line) || $line === '' || trim(strtolower($line)) === 'exit' || trim(strtolower($line)) === 'quit') {
                 $this->info('Goodbye!');
                 break;
             }
 
-            $query .= ' ' . $line;
+            $query .= ' '.$line;
 
             // Check if query ends with semicolon
             if (str_ends_with(trim($query), ';')) {
@@ -88,7 +105,7 @@ class LitebaseDbCommand extends Command
                         $this->info("Query OK, {$affectedRows} row(s) affected");
                     }
                 } catch (\Exception $e) {
-                    $this->error('Error: ' . $e->getMessage());
+                    $this->error('Error: '.$e->getMessage());
                 }
 
                 $query = '';
@@ -102,7 +119,7 @@ class LitebaseDbCommand extends Command
     /**
      * Display query results in a table format.
      *
-     * @param  array  $results
+     * @param  array<int, mixed>  $results
      * @return void
      */
     protected function displayResults(array $results)
@@ -118,6 +135,6 @@ class LitebaseDbCommand extends Command
         $headers = array_keys($rows[0]);
 
         $this->table($headers, $rows);
-        $this->info('(' . count($rows) . ' row' . (count($rows) !== 1 ? 's' : '') . ')');
+        $this->info('('.count($rows).' row'.(count($rows) !== 1 ? 's' : '').')');
     }
 }
