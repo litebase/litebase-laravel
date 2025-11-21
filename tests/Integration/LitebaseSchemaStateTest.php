@@ -91,7 +91,7 @@ describe('LitebaseSchemaState', function () {
         $connection = app()->db->connection('litebase');
         $builder = $connection->getSchemaBuilder();
 
-        // Clean up first
+        // Ensure clean slate - drop if exists
         $builder->dropIfExists('migrations');
 
         // Create migrations table
@@ -117,7 +117,7 @@ describe('LitebaseSchemaState', function () {
         expect($dumpContent)->toContain('migrations');
         expect($dumpContent)->toContain('2024_01_01_000000_create_users_table');
 
-        // Drop and recreate migrations table to simulate a fresh load
+        // Drop migrations table to simulate a fresh load
         $builder->drop('migrations');
         expect($builder->hasTable('migrations'))->toBeFalse();
 
