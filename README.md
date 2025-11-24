@@ -187,13 +187,13 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 Run unit tests:
 
-```bash
+```sh
 composer test
 ```
 
 Run integration tests (requires Docker):
 
-```bash
+```sh
 composer test-integration
 ```
 
@@ -201,19 +201,19 @@ composer test-integration
 
 Run static analysis:
 
-```bash
+```sh
 composer phpstan
 ```
 
 Run code style checks:
 
-```bash
+```sh
 composer pint
 ```
 
 ## Code of Conduct
 
-Please see [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
+Please see [Code of Conduct](https://github.com/litebase/litebase-laravel?tab=coc-ov-file) for details.
 
 ## Security
 
