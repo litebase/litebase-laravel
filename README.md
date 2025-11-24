@@ -181,7 +181,7 @@ This provides an interactive SQL prompt where you can execute queries directly a
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/litebase/litebase-laravel?tab=contributing-ov-file) for details.
 
 ### Testing
 
