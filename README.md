@@ -27,8 +27,8 @@ Add a Litebase connection to your `config/database.php`:
         'database' => env('LITEBASE_DATABASE', 'your_database/main'),
         'host' => env('LITEBASE_HOST', 'localhost'),
         'port' => env('LITEBASE_PORT', '8888'),
-        'username' => env('LITEBASE_USERNAME', 'root'),
-        'password' => env('LITEBASE_PASSWORD', ''),
+        'access_key_id' => env('LITEBASE_ACCESS_KEY_ID'),
+        'access_key_secret' => env('LITEBASE_ACCESS_KEY_SECRET'),
     ],
 ],
 ```
@@ -38,8 +38,8 @@ Add the corresponding environment variables to your `.env`:
 ```env
 LITEBASE_HOST=localhost
 LITEBASE_PORT=8888
-LITEBASE_USERNAME=root
-LITEBASE_PASSWORD=your_password
+LITEBASE_ACCESS_KEY_ID=lbakid_**********
+LITEBASE_ACCESS_KEY_SECRET=lbaks_**********
 LITEBASE_DATABASE=your_database/main
 ```
 
