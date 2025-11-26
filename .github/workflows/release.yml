@@ -49,7 +49,7 @@ jobs:
                   # Create release with auto-generated notes
                   gh release create ${{ needs.get-version.outputs.version }} \
                     --draft \
-                    --title "Litebase PHP ${{ needs.get-version.outputs.version }} (Alpha)" \
+                    --title "Litebase Laravel ${{ needs.get-version.outputs.version }} (Alpha)" \
                     --target ${{ github.sha }} \
                     --generate-notes
               env:
