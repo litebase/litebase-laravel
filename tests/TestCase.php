@@ -19,7 +19,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         $config->set('database.connections.litebase', [
             'driver' => 'litebase',
             'database' => 'test/main',
-            'host' => 'http://localhost:8888',
+            'host' => '127.0.0.1',
             'username' => 'root',
             'password' => 'password',
             'port' => '8888',
