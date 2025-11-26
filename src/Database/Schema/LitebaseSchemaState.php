@@ -22,12 +22,12 @@ class LitebaseSchemaState extends SchemaState
 
         // Build the schema dump with proper formatting
         $schemaDump = collect($schema)
-            ->map(fn($item) => is_array($item) ? $item['sql'] : $item->sql)
-            ->filter(fn($sql) => ! preg_match('/CREATE TABLE sqlite_.+/i', $sql))
-            ->map(fn($sql) => $sql . ';')
-            ->implode(PHP_EOL . PHP_EOL);
+            ->map(fn ($item) => is_array($item) ? $item['sql'] : $item->sql)
+            ->filter(fn ($sql) => ! preg_match('/CREATE TABLE sqlite_.+/i', $sql))
+            ->map(fn ($sql) => $sql.';')
+            ->implode(PHP_EOL.PHP_EOL);
 
-        $this->files->put($path, $schemaDump . PHP_EOL);
+        $this->files->put($path, $schemaDump.PHP_EOL);
 
         if ($this->hasMigrationTable()) {
             $this->appendMigrationData($path);
@@ -66,11 +66,11 @@ class LitebaseSchemaState extends SchemaState
                     }
 
                     if (is_string($value)) {
-                        return "'" . str_replace("'", "''", $value) . "'";
+                        return "'".str_replace("'", "''", $value)."'";
                     }
 
                     if (is_scalar($value)) {
-                        return "'" . str_replace("'", "''", (string) $value) . "'";
+                        return "'".str_replace("'", "''", (string) $value)."'";
                     }
 
                     return 'NULL';
@@ -81,7 +81,7 @@ class LitebaseSchemaState extends SchemaState
             $insertStatements[] = "INSERT INTO {$migrationTable} VALUES ({$values});";
         }
 
-        $this->files->append($path, PHP_EOL . implode(PHP_EOL, $insertStatements) . PHP_EOL);
+        $this->files->append($path, PHP_EOL.implode(PHP_EOL, $insertStatements).PHP_EOL);
     }
 
     /**
