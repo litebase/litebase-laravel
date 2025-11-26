@@ -26,7 +26,7 @@ beforeAll(function () {
     try {
         $response = $client->clusterStatus()->listClusterStatuses();
     } catch (\Exception $e) {
-        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: '.$e->getMessage());
+        throw new \RuntimeException('Failed to connect to Litebase server for integration tests: ' . $e->getMessage());
     }
 
     if ($response->getStatus() !== 'success') {
@@ -49,11 +49,31 @@ afterAll(function () {
 
 describe('Laravel Migration Commands', function () {
     beforeEach(function () {
+        // Clean up any leftover migration files from previous test runs
+        $migrationPath = database_path('migrations');
+        if (is_dir($migrationPath)) {
+            $files = glob("{$migrationPath}/*.php");
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+        }
+
         // Clean up migrations table before each test
         Schema::connection('litebase')->dropIfExists('migrations');
 
-        // Clean up any test tables
-        $tables = ['test_users', 'test_posts', 'test_products'];
+        // Clean up any test tables that might exist from previous runs
+        $tables = [
+            'test_users',
+            'test_posts',
+            'test_products',
+            'step_table_1',
+            'step_table_2',
+            'step_table_3',
+            'old_table_1',
+            'fresh_test_table',
+        ];
 
         foreach ($tables as $table) {
             Schema::connection('litebase')->dropIfExists($table);
@@ -61,10 +81,30 @@ describe('Laravel Migration Commands', function () {
     });
 
     afterEach(function () {
+        // Clean up any migration files created during the test
+        $migrationPath = database_path('migrations');
+        if (is_dir($migrationPath)) {
+            $files = glob("{$migrationPath}/*.php");
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+        }
+
         // Clean up after each test
         Schema::connection('litebase')->dropIfExists('migrations');
 
-        $tables = ['test_users', 'test_posts', 'test_products'];
+        $tables = [
+            'test_users',
+            'test_posts',
+            'test_products',
+            'step_table_1',
+            'step_table_2',
+            'step_table_3',
+            'old_table_1',
+            'fresh_test_table',
+        ];
 
         foreach ($tables as $table) {
             Schema::connection('litebase')->dropIfExists($table);
@@ -128,9 +168,12 @@ PHP;
 
             // Verify migration was recorded
             $connection = DB::connection('litebase');
+
+            /** @var \Illuminate\Support\Collection<int, array<string, mixed>> $migrations */
             $migrations = $connection->table('migrations')->get();
+
             expect($migrations)->not->toBeEmpty();
-            expect($migrations[0]->migration)->toContain('create_test_users_table');
+            expect($migrations[0]['migration'])->toContain('create_test_users_table');
         } finally {
             // Clean up migration file
             if (file_exists($migrationFile)) {
@@ -171,7 +214,7 @@ PHP;
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His').'1';
+        $timestamp = date('Y_m_d_His') . '1';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_test_products_table.php";
 
         $migrationContent = <<<'PHP'
@@ -489,7 +532,7 @@ PHP;
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His').'2';
+        $timestamp = date('Y_m_d_His') . '2';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_test_users_refresh.php";
 
         $migrationContent = <<<'PHP'
@@ -561,7 +604,7 @@ PHP;
             mkdir($migrationPath, 0755, true);
         }
 
-        $timestamp = date('Y_m_d_His').'3';
+        $timestamp = date('Y_m_d_His') . '3';
         $migrationFile = "{$migrationPath}/{$timestamp}_create_fresh_test_table.php";
 
         $migrationContent = <<<'PHP'

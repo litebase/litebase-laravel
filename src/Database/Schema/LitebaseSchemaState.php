@@ -54,7 +54,7 @@ class LitebaseSchemaState extends SchemaState
 
         foreach ($migrations as $migration) {
             // Handle both array and object results
-            $migrationData = get_object_vars($migration);
+            $migrationData = is_array($migration) ? $migration : get_object_vars($migration);
 
             $values = collect($migrationData)
                 ->map(function ($value) {
