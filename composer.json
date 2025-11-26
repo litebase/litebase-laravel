@@ -1,5 +1,6 @@
 {
     "name": "litebase/litebase-laravel",
+    "description": "Litebase SDK for Laravel",
     "authors": [
         {
             "name": "Litebase",
