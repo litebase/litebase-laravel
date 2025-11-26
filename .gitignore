@@ -1,6 +1,5 @@
 .DS_STORE
 build
-composer.lock
 docs
 vendor
 coverage
