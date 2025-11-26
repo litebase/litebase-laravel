@@ -53,9 +53,12 @@ describe('Laravel Migration Commands', function () {
         $migrationPath = database_path('migrations');
         if (is_dir($migrationPath)) {
             $files = glob("{$migrationPath}/*.php");
-            foreach ($files as $file) {
-                if (is_file($file)) {
-                    unlink($file);
+
+            if ($files !== false) {
+                foreach ($files as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
                 }
             }
         }
@@ -85,9 +88,12 @@ describe('Laravel Migration Commands', function () {
         $migrationPath = database_path('migrations');
         if (is_dir($migrationPath)) {
             $files = glob("{$migrationPath}/*.php");
-            foreach ($files as $file) {
-                if (is_file($file)) {
-                    unlink($file);
+
+            if ($files !== false) {
+                foreach ($files as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
                 }
             }
         }
