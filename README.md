@@ -1,6 +1,7 @@
 # Litebase Laravel SDK (Alpha)
 
 [![tests](https://github.com/litebase/litebase-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/litebase/litebase-laravel/actions/workflows/tests.yml)
+<a href="https://github.com/litebase/litebase-laravel/blob/main/LICENSE.md"><img alt="GitHub License" src="https://img.shields.io/github/license/litebase/litebase-laravel"></a>
 
 A Laravel database driver for [Litebase](https://github.com/litebase/litebase), an open source distributed database built on SQLite, distributed file systems, and object storage.
 
