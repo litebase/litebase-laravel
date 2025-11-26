@@ -22,7 +22,7 @@ class LitebaseContainer
             -e LITEBASE_STORAGE_NETWORK_PATH=/tmp/data/_network \\
             -e LITEBASE_STORAGE_TMP_PATH=/tmp \\
             -e LITEBASE_STORAGE_OBJECT_MODE=local \\
-            litebase/litebase:dev start';
+            litebase/litebase start';
 
         shell_exec($startCommand);
 
