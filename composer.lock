@@ -1955,16 +1955,16 @@
         },
         {
             "name": "litebase/litebase-php",
-            "version": "v0.5.7",
+            "version": "v0.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/litebase/litebase-php.git",
-                "reference": "c1dc857a20381ec6b1b080142fac3a5b9ffb5780"
+                "reference": "3e7fdd8f846df9a5f1e8c77bc14fbb418899f6c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/litebase/litebase-php/zipball/c1dc857a20381ec6b1b080142fac3a5b9ffb5780",
-                "reference": "c1dc857a20381ec6b1b080142fac3a5b9ffb5780",
+                "url": "https://api.github.com/repos/litebase/litebase-php/zipball/3e7fdd8f846df9a5f1e8c77bc14fbb418899f6c1",
+                "reference": "3e7fdd8f846df9a5f1e8c77bc14fbb418899f6c1",
                 "shasum": ""
             },
             "require": {
@@ -2004,7 +2004,7 @@
             "homepage": "https://litebase.com",
             "support": {
                 "issues": "https://github.com/litebase/litebase-php/issues",
-                "source": "https://github.com/litebase/litebase-php/tree/v0.5.7"
+                "source": "https://github.com/litebase/litebase-php/tree/v0.5.9"
             },
             "funding": [
                 {
@@ -2012,7 +2012,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-06T16:30:48+00:00"
+            "time": "2026-01-13T18:17:49+00:00"
         },
         {
             "name": "monolog/monolog",
